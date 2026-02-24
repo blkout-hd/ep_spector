@@ -1,0 +1,103 @@
+# SPECTOR - Robots.txt for Web Crawlers
+# https://www.robotstxt.org/
+
+# Global Rules
+User-agent: *
+Crawl-delay: 1
+
+# Allow access to public documentation
+Allow: /docs/
+Allow: /README.md
+Allow: /LICENSE
+Allow: /CONTRIBUTING.md
+
+# Disallow access to sensitive areas
+Disallow: /config/
+Disallow: /data/
+Disallow: /.env
+Disallow: /.env.local
+Disallow: /.git/
+Disallow: /scripts/
+Disallow: /tests/
+Disallow: /__pycache__/
+Disallow: /.pytest_cache/
+Disallow: /tor_data/
+
+# Disallow admin interfaces
+Disallow: /admin/
+Disallow: /api/admin/
+Disallow: /tor/dashboard
+
+# Disallow temporary files
+Disallow: /tmp/
+Disallow: /temp/
+Disallow: /*.log
+Disallow: /*.db
+Disallow: /*.sqlite
+
+# AI/ML Model Files
+Disallow: /models/
+Disallow: /*.pt
+Disallow: /*.pth
+Disallow: /*.onnx
+Disallow: /*.h5
+
+# Specific Bot Rules
+
+# Google Bot - Allow documentation indexing
+User-agent: Googlebot
+Allow: /docs/
+Allow: /README.md
+Crawl-delay: 2
+
+# Bing Bot
+User-agent: Bingbot
+Allow: /docs/
+Crawl-delay: 2
+
+# Academic/Research Bots - More permissive
+User-agent: ia_archiver
+User-agent: archive.org_bot
+Allow: /docs/
+Allow: /README.md
+Allow: /CONTRIBUTING.md
+Crawl-delay: 5
+
+# Block AI Training Scrapers (OpenAI, Anthropic, etc.)
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: CCBot
+User-agent: Claude-Web
+User-agent: anthropic-ai
+User-agent: Google-Extended
+User-agent: cohere-ai
+User-agent: PerplexityBot
+Disallow: /
+
+# Block aggressive/malicious crawlers
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: DotBot
+User-agent: MJ12bot
+User-agent: BLEXBot
+Disallow: /
+
+# Sitemap location (if we create one)
+Sitemap: https://github.com/your-org/SPECTOR/sitemap.xml
+
+# Rate Limiting Notice
+# ----------------------------------------------------------------------
+# SPECTOR respects rate limits and expects the same courtesy.
+# Default rate limit: 1 request per second per IP
+# Burst limit: 10 requests per 10 seconds
+# 
+# Violating these limits may result in IP blocking.
+# For bulk access, please contact: contributors@example.com
+# ----------------------------------------------------------------------
+
+# Legal Notice
+# ----------------------------------------------------------------------
+# SPECTOR is designed for PUBLIC data analysis only.
+# Accessing non-public areas violates CFAA and may be prosecuted.
+# See DISCLAIMER.md for full legal terms.
+# ----------------------------------------------------------------------

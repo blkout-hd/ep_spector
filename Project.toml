@@ -1,0 +1,26 @@
+[compat]
+julia = "1.9"
+
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
+LightGraphs = "093fc24a-ae57-5d32-914d-b1d1474d41b9"
+MetaGraphsNext = "fa8bd995-216d-47f1-8a91-f3b6f7e67b9a"
+HyperGraphs = "f74d813f-4d6b-4d3b-9e3f-6b5e5a5e5e5e"
+PlasmoData = "00000000-0000-0000-0000-000000000000"
+UMAP = "f2e9b6e0-d2c4-4e5e-8b6e-0e5e5e5e5e5e"
+TSNE = "f2e9b6e1-d2c4-4e5e-8b6e-0e5e5e5e5e5e"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+JSON3 = "0f8b85d8-7281-11e9-0900-557540881401"
+Async = "a9b6321e-b6b4-4d6b-8b6e-0e5e5e5e5e5e"
+Distributed = "8ba89e20-285c-11e9-1891-90845b16f772"
+Threads = "00000000-0000-0000-0000-000000000000"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

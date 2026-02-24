@@ -1,0 +1,635 @@
+{
+  "total_fingerprints": 80,
+  "severity_breakdown": {
+    "NEGLIGIBLE": 0,
+    "LOW": 0,
+    "MODERATE": 0,
+    "HIGH": 32,
+    "CRITICAL": 48
+  },
+  "top_exposures": [
+    {
+      "location": "AGENTS.md:45",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "AGENTS.md:181",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "AGENTS.md:182",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "AGENTS.md:198",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "HISTORY_PURGE_QUICK_REFERENCE.md:13",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "HISTORY_PURGE_QUICK_REFERENCE.md:28",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "HISTORY_PURGE_QUICK_REFERENCE.md:73",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "HISTORY_PURGE_QUICK_REFERENCE.md:74",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "HISTORY_PURGE_QUICK_REFERENCE.md:80",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "OSS_FINAL_CHECKLIST.md:33",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "OSS_RELEASE_SUMMARY.md:36",
+      "type": "offloader_db",
+      "severity": "HIGH",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "OSS_RELEASE_SUMMARY.md:37",
+      "type": "log_file",
+      "severity": "HIGH",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "OSS_RELEASE_SUMMARY.md:38",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "OSS_RELEASE_SUMMARY.md:60",
+      "type": "offloader_db",
+      "severity": "HIGH",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "OSS_RELEASE_SUMMARY.md:61",
+      "type": "log_file",
+      "severity": "HIGH",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "OSS_RELEASE_SUMMARY.md:62",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "README.md:198",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "REPOSITORY_STATUS_CLEAN_SLATE.md:61",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "REPOSITORY_STATUS_CLEAN_SLATE.md:84",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    },
+    {
+      "location": "REPOSITORY_STATUS_CLEAN_SLATE.md:90",
+      "type": "memory_file",
+      "severity": "CRITICAL",
+      "exposure": 0.4,
+      "operator": "remove_file"
+    }
+  ],
+  "refactor_plan": [
+    {
+      "file": "AGENTS.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "AGENTS.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "AGENTS.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "AGENTS.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "HISTORY_PURGE_QUICK_REFERENCE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "HISTORY_PURGE_QUICK_REFERENCE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "HISTORY_PURGE_QUICK_REFERENCE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "HISTORY_PURGE_QUICK_REFERENCE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "HISTORY_PURGE_QUICK_REFERENCE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "OSS_FINAL_CHECKLIST.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "README.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "REPOSITORY_STATUS_CLEAN_SLATE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "REPOSITORY_STATUS_CLEAN_SLATE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "REPOSITORY_STATUS_CLEAN_SLATE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "REPOSITORY_STATUS_CLEAN_SLATE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "REPOSITORY_STATUS_CLEAN_SLATE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "REPOSITORY_STATUS_CLEAN_SLATE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_COMPREHENSIVE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_REMEDIATION_FINAL_REPORT.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_REMEDIATION_FINAL_REPORT.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_REMEDIATION_FINAL_REPORT.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_REMEDIATION_FINAL_REPORT.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_REMEDIATION_FINAL_REPORT.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_REMEDIATION_FINAL_REPORT.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_REMEDIATION_FINAL_REPORT.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_REMEDIATION_FINAL_REPORT.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_REMEDIATION_FINAL_REPORT.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_REMEDIATION_FINAL_REPORT.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_AUDIT_REMEDIATION_FINAL_REPORT.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_IMPLEMENTATION_COMPLETE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_COMPLETE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_COMPLETE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_COMPLETE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_COMPLETE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_COMPLETE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_COMPLETE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_COMPLETE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_COMPLETE.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_EXECUTION_PLAN.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_EXECUTION_PLAN.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_EXECUTION_PLAN.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_EXECUTION_PLAN.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SECURITY_REMEDIATION_EXECUTION_PLAN.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SPECTOR_OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "SPECTOR_OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "SPECTOR_OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "SPECTOR_OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "SPECTOR_OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "SPECTOR_OSS_RELEASE_SUMMARY.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "TODO.md",
+      "operator": "remove_file",
+      "pattern": "memory\\.json",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "enhanced_gpt_offloader.*\\.db",
+      "priority": 0.4
+    },
+    {
+      "file": "forsec_scan_report.json",
+      "operator": "remove_file",
+      "pattern": "ai_ants.*\\.log",
+      "priority": 0.4
+    }
+  ],
+  "mhri_score": 0.6
+}

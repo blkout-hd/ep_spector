@@ -1,0 +1,35 @@
+# .github/CODEOWNERS
+# Auto-assigns reviewers on pull requests
+# Format: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything
+* @blkout-hd
+
+# Critical security and configuration files
+DISCLAIMER.md @blkout-hd
+docker-compose.yml @blkout-hd
+.env.example @blkout-hd
+AGENTS.md @blkout-hd
+ARCHITECTURE.md @blkout-hd
+SECURITY.md @blkout-hd
+
+# Source code directories
+src/ @blkout-hd
+agents/ @blkout-hd
+mcp_servers/ @blkout-hd
+
+# Configuration files
+*.toml @blkout-hd
+*.yaml @blkout-hd
+*.yml @blkout-hd
+
+# Julia code
+*.jl @blkout-hd
+
+# Python code
+*.py @blkout-hd
+
+# Security policies
+.github/ @blkout-hd
+.github/workflows/ @blkout-hd
+.github/CODEOWNERS @blkout-hd

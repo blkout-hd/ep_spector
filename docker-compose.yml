@@ -1,0 +1,179 @@
+# SPECTOR docker-compose.yml — Compose Spec (no version key)
+# All credentials MUST be set in .env — no fallbacks
+
+services:
+  # Qdrant Vector Database
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: spector-qdrant
+    ports:
+      - "127.0.0.1:6333:6333"
+      - "127.0.0.1:6334:6334"
+    environment:
+      - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}
+      - QDRANT__SERVICE__GRPC_PORT=6334
+    volumes:
+      - ./data/qdrant:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-H",
+             "api-key: ${QDRANT_API_KEY}",
+             "http://localhost:6333/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [spector-net]
+
+  # Neo4j Graph Database
+  neo4j:
+    image: neo4j:5.15
+    container_name: spector-neo4j
+    ports:
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_dbms_memory_heap_initial__size=512M
+      - NEO4J_dbms_memory_heap_max__size=1G
+      - NEO4J_dbms_security_auth__minimum__password__length=12
+    volumes:
+      - ./data/neo4j/data:/data
+      - ./data/neo4j/logs:/logs
+      - ./data/neo4j/plugins:/plugins
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:7474"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [spector-net]
+
+  # Redis Cache + LangCache
+  redis:
+    image: redis:7-alpine
+    container_name: spector-redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    command: >
+      redis-server
+      --appendonly yes
+      --requirepass ${REDIS_PASSWORD}
+      --rename-command FLUSHALL ""
+      --rename-command FLUSHDB ""
+      --rename-command CONFIG ""
+    volumes:
+      - ./data/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [spector-net]
+
+  # MongoDB Document Store
+  mongodb:
+    image: mongo:7
+    container_name: spector-mongodb
+    ports:
+      - "127.0.0.1:27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    volumes:
+      - ./data/mongodb:/data/db
+    networks: [spector-net]
+
+  # ChromaDB (Dev/Embedded Vector Store)
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: spector-chromadb
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - CHROMA_SERVER_AUTH_CREDENTIALS=${CHROMA_TOKEN}
+      - CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER=chromadb.auth.token.TokenConfigServerAuthCredentialsProvider
+      - CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.token.TokenAuthServerProvider
+    volumes:
+      - ./data/chroma:/chroma/chroma
+    networks: [spector-net]
+
+  # PostgreSQL (Django DB)
+  postgres:
+    image: postgres:15-alpine
+    container_name: spector-postgres
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=spector
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [spector-net]
+
+  # Django Web Application
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    container_name: spector-django
+    ports:
+      - "127.0.0.1:8001:8000"
+    env_file: .env
+    depends_on:
+      - neo4j
+      - qdrant
+      - redis
+      - mongodb
+      - postgres
+    networks: [spector-net]
+
+  # Tornado Web Server (Onion Service)
+  tornado:
+    build:
+      context: .
+      dockerfile: Dockerfile.tornado
+    container_name: spector-tornado
+    ports:
+      - "127.0.0.1:8888:8888"
+    env_file: .env
+    depends_on:
+      - django
+    networks: [spector-net]
+
+  # LangGraph Agent Worker
+  agent-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: spector-agent-worker
+    env_file: .env
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    depends_on:
+      - redis
+      - neo4j
+      - qdrant
+    networks: [spector-net]
+
+networks:
+  spector-net:
+    driver: bridge
+    internal: false
+
+volumes:
+  qdrant: {}
+  neo4j: {}
+  redis: {}
+  mongodb: {}
+  chroma: {}
+  postgres: {}
