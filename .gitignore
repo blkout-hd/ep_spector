@@ -1,74 +1,8 @@
-# =============================================================================
-# SPECTOR Project - Comprehensive .gitignore
-# Semantic Pipeline for Entity Correlation and Topological Organization Research
-# =============================================================================
-
-# -----------------------------------------------------------------------------
-# SBSCRPT CORP - Proprietary Development Files
-# -----------------------------------------------------------------------------
-*.prop
-*.sbscrpt
-*.encrypted
-*.key
-*.pem
-*.crt
-secrets/
-credentials/
-.env.local
-.env.*.local
-*.secret
-
-# -----------------------------------------------------------------------------
-# Security Remediation Artifacts - Temporary Documentation (Optional)
-# -----------------------------------------------------------------------------
-*purge*.md
-*PURGE*.md
-*history*.md
-*HISTORY*.md
-*remediation*.md
-*REMEDIATION*.md
-SECURITY_REMEDIATION*.md
-REPOSITORY_STATUS*.md
-SECURITY_IMPLEMENTATION*.md
-SECURITY_AUDIT*.md
-
-# -----------------------------------------------------------------------------
-# Agent Runtime State - NEVER COMMIT (Priority 0)
-# -----------------------------------------------------------------------------
-memory.json
-.qwen/
-*.memory.json
-agent_state*.json
-checkpoints/
-agent_cache/
-langgraph_checkpoints/
-redis_dump/
-*.langcache
-state.json
-checkpoints/
-
-# -----------------------------------------------------------------------------
-# Environment Secrets - NEVER COMMIT
-# -----------------------------------------------------------------------------
-.env
-.env.*
-!.env.example
-!.env.schema
-.env.local
-.env.*.local
-
-# -----------------------------------------------------------------------------
 # Python
-# -----------------------------------------------------------------------------
-# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
-
-# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -86,493 +20,64 @@ wheels/
 .installed.cfg
 *.egg
 
-# PyInstaller
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# pipenv
-Pipfile.lock
-
-# PEP 582
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.venv
-env/
+# Virtual environments
 venv/
 ENV/
-env.bak/
-venv.bak/
+env/
+.venv
 
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# -----------------------------------------------------------------------------
-# Julia
-# -----------------------------------------------------------------------------
-# Bytecode
-*.ji
-*.o
-*.obj
-*.so
-*.dylib
-*.dll
-
-# Compiled modules
-*.jii
-*.jio
-*.jis
-
-# Julia package cache
-~/.julia/compiled/
-.julia/compiled/
-
-# Julia environments
-.julia/environments/
-Manifest.toml
-LocalPreferences.toml
-
-# Julia build artifacts
-.julia/artifacts/
-.julia/packages/
-.julia/registries/
-
-# Julia test coverage
-*.cov
-*.gcda
-*.gcno
-lcov/
-coverage/
-
-# Julia documentation
-.julia/docs/
-docs/build/
-docs/site/
-
-# Julia notebooks
-*.jl.ipynb
-.ipynb_checkpoints/
-
-# Julia IDE settings
-.julia/config/settings.jl
-.idea/julia.xml
-.vscode/settings.jl
-
-# Julia recursive patterns (deep directory structures)
-**/.julia/
-**/julia_pkg_cache/
-**/julia_artifacts/
-**/*.ji.bak
-**/LocalPreferences.toml.local
-
-# Julia GPU cache (CUDA, ROCm)
-.julia/gpu_cache/
-**/cuda_cache/
-**/rocm_cache/
-
-# -----------------------------------------------------------------------------
-# CUDA / GPU
-# -----------------------------------------------------------------------------
-# CUDA cache
-.cuda_cache/
-nvvmir*
-cudacache*
-
-# CUDA compiled files
-*.cubin
-*.fatbin
-*.ptx
-
-# CUDA intermediate files
-*.i
-*.ii
-*.s
-
-# GPU profiling
-*.gputrace
-*.nvvp
-*.nsys-rep
-
-# -----------------------------------------------------------------------------
-# Node.js
-# -----------------------------------------------------------------------------
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# -----------------------------------------------------------------------------
-# IDE / Editors
-# -----------------------------------------------------------------------------
-# JetBrains
+# IDEs
+.vscode/
 .idea/
-*.iml
-*.ipr
-*.iws
-
-# VS Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
-!.vscode/cspell.json
-.vscode-test/
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Vim
 *.swp
 *.swo
 *~
-.viminfo
 
-# Emacs
-*~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-*.elc
-auto-save-list
-tramp
-.\#*
-
-# OS X
+# OS
 .DS_Store
-.AppleDouble
-.LSOverride
-._*
-
-# Windows
 Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-*.lnk
 
-# -----------------------------------------------------------------------------
-# Databases
-# -----------------------------------------------------------------------------
-# SQLite
+# Project specific
+data/*
+!data/.gitkeep
 *.db
 *.sqlite
-*.sqlite3
-*.db-shm
-*.db-wal
-
-# Neo4j
-neo4j/data/
-*.neo4j/
-
-# Qdrant
-qdrant_storage/
-.qdrant/
-
-# Weaviate
-weaviate_data/
-
-# ChromaDB
-chroma/
-.chroma/
-
-# Redis dump
-dump.rdb
-appendonly.aof
-
-# MongoDB
-mongodb_data/
-mongo_data/
-
-# DuckDB
-*.duckdb
-duckdb_data/
-
-# TileDB
-*.tiledb
-tiledb_data/
-
-# -----------------------------------------------------------------------------
-# AI / ML Models
-# -----------------------------------------------------------------------------
-# Model weights
-*.pth
-*.pt
-*.onnx
-*.pb
-*.h5
-*.pkl
-*.pickle
-*.joblib
-
-# Model checkpoints
-checkpoints/
-*.ckpt
-
-# TensorBoard logs
-logs/
-runs/
-
-# Hugging Face cache
-.huggingface/
-transformers_cache/
-
-# -----------------------------------------------------------------------------
-# Data Files
-# -----------------------------------------------------------------------------
-# Large datasets
-*.parquet
-*.orc
-*.avro
-data/raw/
-data/processed/
-data/external/
-!data/.gitkeep
-
-# PDFs and documents (exclude samples)
-documents/
-pdfs/
-!samples/
-!docs/
-
-# Media files
-*.mp4
-*.avi
-*.mov
-*.mkv
-*.jpg
-*.jpeg
-*.png
-*.gif
-media/
-!media/.gitkeep
-
-# Archives
-*.zip
-*.tar
-*.tar.gz
-*.rar
-*.7z
-
-# -----------------------------------------------------------------------------
-# Logs
-# -----------------------------------------------------------------------------
 *.log
-logs/
-Log/
-LOG/
+memory.json
+*.pkl
 
-# -----------------------------------------------------------------------------
-# Temporary Files
-# -----------------------------------------------------------------------------
-tmp/
-temp/
-*.tmp
-*.temp
-*.bak
-*.backup
-*.swp
-*.swo
-
-# -----------------------------------------------------------------------------
-# Build / Deployment
-# -----------------------------------------------------------------------------
-# Docker
-docker-compose.override.yml
-.docker/
-
-# Kubernetes
-*.kubeconfig
-.kube/
-
-# Terraform
-*.tfstate
-*.tfstate.*
-.terraform/
-*.tfplan
-
-# Ansible
-*.retry
-
-# -----------------------------------------------------------------------------
 # Testing
-# -----------------------------------------------------------------------------
-# Test fixtures
-test_fixtures/
-fixtures/
+.pytest_cache/
+.coverage
+htmlcov/
 
-# Test results
-test-results/
-test_output/
+# Internal documentation (not for public repo)
+*LEGAL_RISK*.md
+*LEGAL_COMPLIANCE*.md
+*DATA_ENGINEERING*.md
+*OSS_RELEASE*.md
+*OSS_FINAL*.md
+*DEPLOYMENT_SUMMARY*.md
+*SECURITY_AUDIT*.md
+*SECURITY_REMEDIATION*.md
+*SECURITY_IMPLEMENTATION*.md
+HISTORY_PURGE*.md
+REPOSITORY_STATUS*.md
+*PRE_COMMIT_INSTALL*.md
+cleanup_for_oss.*
+finalize_oss_release.*
+execute_oss_release.*
+execute_final_push.*
+execute_tor_release.*
+*_OSS.md
+forsec_scan_report.json
+forsec_advanced_scan.json
 
-# -----------------------------------------------------------------------------
-# Documentation Generated
-# -----------------------------------------------------------------------------
-docs/_build/
-site/
-public/
+# Agent skills (internal)
+.agents/
+.claude/
+.copilot/session-state/
 
-# -----------------------------------------------------------------------------
-# Security
-# -----------------------------------------------------------------------------
-# SSH keys
-*.key
-*.pem
-id_rsa
-id_dsa
-id_ecdsa
-id_ed25519
-
-# Certificates
-*.crt
-*.cer
-*.der
-
-# Passwords
-passwords.txt
-credentials.json
-.secrets
-
-# -----------------------------------------------------------------------------
-# Project Specific
-# -----------------------------------------------------------------------------
-# Memory and state
-memory.json.local
-*.memory.local
-
-# Local configuration
-config.local.yaml
-config.local.json
-.local.env
-
-# Audit logs (sensitive)
-audit_logs/
-!audit_logs/.gitkeep
-
-# Vector store data
-vector_store/
-embeddings/
-!embeddings/.gitkeep
-
-# Knowledge graph exports
-kg_exports/
-neo4j_exports/
-
-# Tor hidden service keys
-hidden_service/
-tor_keys/
-
-# -----------------------------------------------------------------------------
-# Julia Recursive Patterns (Deep Structures)
-# -----------------------------------------------------------------------------
-**/*.ji
-**/*.jii
-**/.julia/compiled/**
-**/julia_pkg_cache/**
-**/LocalPreferences.toml
-**/Manifest.toml
-**/*.julia_cache/**
-
-# -----------------------------------------------------------------------------
-# CUDA Recursive Patterns
-# -----------------------------------------------------------------------------
-**/cuda_cache/**
-**/.nv/**
-**/*.cubin
-**/*.ptx
-
-# -----------------------------------------------------------------------------
-# Keep These (Negation Patterns)
-# -----------------------------------------------------------------------------
-!README.md
-!DISCLAIMER.md
-!LICENSE
-!LICENSE-MIT
-!LICENSE-AGPL
-!ARCHITECTURE.md
-!INSTALL.md
-!USAGE.md
-!TODO.md
-!AGENTS.md
-!pyproject.toml
-!setup.py
-!requirements*.txt
-!*.jl
-!*.py
-!docker-compose.yml
-!Dockerfile
-!.github/
-!docs/
-!tests/
-!scripts/
-!samples/.gitkeep
-!data/.gitkeep
-!media/.gitkeep
-!audit_logs/.gitkeep
-!embeddings/.gitkeep
-!.secrets.baseline
-!.mailmap
-!.pre-commit-config.yaml
-
-# =============================================================================
-# End of .gitignore
-# =============================================================================
+# Secrets
+.env
+.secrets.baseline

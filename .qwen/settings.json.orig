@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "spector-local": {
+      "command": "python",
+      "args": [
+        "src/python/spector.py"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {}
+    }
+  },
+  "skills": {
+    "anthropics-legal-risk-assessment": {
+      "enabled": true,
+      "source": "symlink"
+    }
+  },
+  "hooks": {
+    "project-skills-sync": {
+      "enabled": true
+    }
+  },
+  "$version": 2
+}
