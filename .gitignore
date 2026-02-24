@@ -84,3 +84,18 @@ forsec_advanced_scan.json
 
 # Qwen CLI (internal)
 .qwen/
+
+# Internal planning/development docs
+TODO.md
+AGENTS.md
+ARCHITECTURE.md
+*INTEGRATION_GUIDE.md
+*INTEGRATION_SUMMARY.md
+*QUICK_REFERENCE.md
+purge_history.ps1
+install-pre-commit.ps1
+commitlint.config.js
+
+# Admin console (internal)
+docs/ADMIN_CONSOLE*.md
+docs/admin_*.html
