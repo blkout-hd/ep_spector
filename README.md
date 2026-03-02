@@ -80,8 +80,8 @@ This project respects and adheres to guidelines established by government agenci
 
 ```bash
 # Clone the repository
-git clone https://github.com/SPECTOR/spector.git
-cd spector
+git clone https://github.com/blkout-hd/ep_spector.git
+cd ep_spector
 
 # Install Python dependencies
 pip install -e .
@@ -110,21 +110,19 @@ python launcher.py admin
 # Custom port and host
 python launcher.py admin --port 9000 --host 0.0.0.0
 
-# Default credentials
-# Username: admin
-# Password: spector
+# Credentials are configured via .env (ADMIN_USERNAME / ADMIN_PASSWORD)
 ```
 
 **Admin Console Features:**
 - **Dashboard**: Real-time system health metrics (CPU, memory, uptime)
 - **Job Queue**: Monitor active document processing jobs
-- **API Endpoints**: 
+- **API Endpoints**:
   - `GET /api/health` - System health status
   - `GET /api/jobs` - Job queue status
   - `GET /api/config` - System configuration
   - `GET /api/metrics` - Performance metrics
 - **WebSocket**: `ws://localhost:8888/ws/metrics` - Live updates
-- **Authentication**: Basic auth with configurable credentials
+- **Authentication**: Basic auth configured via `.env`
 
 ### Basic Usage
 
@@ -186,27 +184,35 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architecture documentation.
 | [TODO.md](TODO.md) | Current tasks and roadmap |
 | [AGENTS.md](AGENTS.md) | AI agent system prompt |
 | [docs/KG_SCHEMA.md](docs/KG_SCHEMA.md) | Knowledge graph schema |
+| [docs/PDR.md](docs/PDR.md) | Product design requirements |
+| [INSTALL.md](INSTALL.md) | Installation guide |
+| [USAGE.md](USAGE.md) | Usage guide |
 
 ## Project Structure
 
 ```
-SPECTOR/
+ep_spector/
 ├── AGENTS.md              # AI agent system prompt
 ├── ARCHITECTURE.md        # System architecture
 ├── DISCLAIMER.md          # Legal framework
+├── INSTALL.md             # Installation guide
+├── USAGE.md               # Usage guide
 ├── TODO.md                # Task queue
-├── memory.json            # Project memory
 ├── pyproject.toml         # Python dependencies
 ├── Project.toml           # Julia dependencies
 ├── docker-compose.yml     # Docker configuration
+├── launcher.py            # CLI launcher with AI provider detection
 ├── src/
 │   ├── python/            # Python source code
-│   │   └── spector.py
+│   │   ├── spector.py     # Core entry point
+│   │   ├── admin_console.py
+│   │   ├── tor_manager.py
+│   │   └── tornado_tor_integration.py
 │   └── julia/             # Julia source code
 │       └── SPECTOR.jl
 ├── agents/                # LangGraph agent definitions
 ├── mcp_servers/           # MCP server implementations
-├── config/                # Configuration files
+├── scripts/               # Utility and security scripts
 ├── data/                  # Data directory (gitignored)
 ├── docs/                  # Documentation
 └── tests/                 # Test suite
@@ -246,6 +252,7 @@ cuda_tier = (
 
 ### Local Development
 ```bash
+cp .env.example .env  # Fill in credentials
 docker compose up -d
 ```
 
@@ -270,6 +277,8 @@ railway up  # Reads docker-compose.yml
 4. Add tests for new features
 5. Submit a pull request
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
+
 ## License
 
 - **Core Framework**: MIT License
@@ -280,12 +289,12 @@ See [LICENSE](LICENSE) for full license text.
 
 ## Acknowledgments
 
-This project builds upon the work of:
-- [epstein-files.org](https://epstein-files.org) (Sifter Labs)
-- [epstein-docs.github.io](https://epstein-docs.github.io) (Epstein Archive)
-- [github.com/ErikVeland/epstein-archive](https://github.com/ErikVeland/epstein-archive)
-- [Librarius](https://boltzmannentropy.github.io/Librarius/)
-- [goyfiles.com](https://www.goyfiles.com)
+This project builds upon publicly available document archives and open-source research tools:
+
+- [epstein-files.org](https://epstein-files.org) (Sifter Labs) — Public document archive
+- [epstein-docs.github.io](https://epstein-docs.github.io) (Epstein Archive) — Accessed 2026-02
+- [github.com/ErikVeland/epstein-archive](https://github.com/ErikVeland/epstein-archive) — Open-source archive, accessed 2026-02
+- [Librarius](https://boltzmannentropy.github.io/Librarius/) — Document analysis reference
 
 ### Open Source Dependencies
 
@@ -303,25 +312,25 @@ SPECTOR relies on the following open-source projects:
 - [Yelp/detect-secrets](https://github.com/Yelp/detect-secrets) - Prevent secret commits
 
 **Document Processing:**
-- [pymupdf/PyMuPDF](https://github.com/pymupdf/PyMuPDF) - PDF text extraction
-- [PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) - OCR engine
-- [tesseract-ocr/tesseract](https://github.com/tesseract-ocr/tesseract) - OCR engine
+- [pymupdf/PyMuPDF](https://github.com/pymupdf/PyMuPDF) - PDF text extraction (AGPL-3.0)
+- [PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) - OCR engine (Apache 2.0)
+- [tesseract-ocr/tesseract](https://github.com/tesseract-ocr/tesseract) - OCR engine (Apache 2.0)
 
 **AI/ML:**
-- [explosion/spaCy](https://github.com/explosion/spacy) - Named entity recognition
-- [urchade/GLiNER](https://github.com/urchade/GLiNER) - Zero-shot NER
-- [FlagOpen/FlagEmbedding](https://github.com/FlagOpen/FlagEmbedding) - BGE-M3 embeddings
-- [rapidsai/cuml](https://github.com/rapidsai/cuml) - GPU-accelerated ML
+- [explosion/spaCy](https://github.com/explosion/spacy) - Named entity recognition (MIT)
+- [urchade/GLiNER](https://github.com/urchade/GLiNER) - Zero-shot NER (Apache 2.0)
+- [FlagOpen/FlagEmbedding](https://github.com/FlagOpen/FlagEmbedding) - BGE-M3 embeddings (MIT)
+- [rapidsai/cuml](https://github.com/rapidsai/cuml) - GPU-accelerated ML (Apache 2.0)
 
 **Graph & Vector Databases:**
-- [neo4j/neo4j](https://github.com/neo4j/neo4j) - Graph database
-- [qdrant/qdrant](https://github.com/qdrant/qdrant) - Vector database
-- [chroma-core/chroma](https://github.com/chroma-core/chroma) - Vector database
+- [neo4j/neo4j](https://github.com/neo4j/neo4j) - Graph database (GPL-3.0 Community)
+- [qdrant/qdrant](https://github.com/qdrant/qdrant) - Vector database (Apache 2.0)
+- [chroma-core/chroma](https://github.com/chroma-core/chroma) - Vector database (Apache 2.0)
 
 **Agent Orchestration:**
-- [langchain-ai/langgraph](https://github.com/langchain-ai/langgraph) - Stateful agent workflows
+- [langchain-ai/langgraph](https://github.com/langchain-ai/langgraph) - Stateful agent workflows (MIT)
 
-See respective repositories for licensing terms.
+See respective repositories for full licensing terms.
 
 ## Disclaimer
 
@@ -333,6 +342,7 @@ See [DISCLAIMER.md](DISCLAIMER.md) for full legal framework.
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-02-19  
+**Version:** 1.0.0
+**Last Updated:** 2026-03-02
 **Status:** Active Development
+**Repository:** https://github.com/blkout-hd/ep_spector
