@@ -1,6 +1,18 @@
-# SPECTOR Julia Package
-# Semantic Pipeline for Entity Correlation and Topological Organization Research
-# Fixed: removed deprecated LightGraphs, non-existent Async pkg, wrong TSNE casing
+"""
+    SPECTOR Julia Package
+    Semantic Pipeline for Entity Correlation and Topological Organization Research
+
+    Mathematical foundations (all public domain / open-source):
+      - BFS:  Cormen, Leiserson, Rivest, Stein. Introduction to Algorithms (MIT Press, 1990).
+              Implemented via Graphs.jl (JuliaGraphs, MIT License).
+      - UMAP: McInnes, Healy, Melville (2018). UMAP: Uniform Manifold Approximation and
+              Projection for Dimension Reduction. arXiv:1802.03426.
+              Implemented via UMAP.jl (BSD-3 License).
+      - t-SNE: van der Maaten & Hinton (2008). Visualizing Data using t-SNE.
+               JMLR 9:2579-2605. Implemented via TSne.jl (MIT License).
+      - L2 norm (embedding_delta_norm): Standard Euclidean norm, public domain.
+               Implemented via Julia LinearAlgebra stdlib.
+"""
 
 module SPECTOR
 
@@ -10,7 +22,7 @@ using Statistics
 using LinearAlgebra
 using SparseArrays
 
-# Graph libraries (Graphs.jl supersedes LightGraphs.jl)
+# Graph libraries (Graphs.jl supersedes deprecated LightGraphs.jl)
 using Graphs
 using MetaGraphs
 using MetaGraphsNext
@@ -23,8 +35,10 @@ catch
 end
 
 # Dimensionality reduction
+# UMAP: McInnes et al. 2018 (arXiv:1802.03426), BSD-3 License
 using UMAP
-using TSne  # correct registered package name (not TSNE)
+# t-SNE: van der Maaten & Hinton 2008 (JMLR 9:2579), MIT License
+using TSne
 
 # HTTP client for media probing
 using HTTP
@@ -33,7 +47,7 @@ using JSON3
 # Distributed computing (Async is a Base macro, not a package)
 using Distributed
 
-export SpectorGraph, probe_extensions, bfs_expand, umap_embed, suppression_score
+export SpectorGraph, probe_extensions, bfs_expand, umap_embed, embedding_delta_norm
 
 """
     SpectorGraph
@@ -57,11 +71,12 @@ function SpectorGraph()::SpectorGraph
 end
 
 """
-    probe_extensions(base_url, extensions; timeout=10)
+    probe_extensions(base_url, extensions; timeout=10, delay_secs=1.0)
 
 Probe for related media files by substituting extensions.
 Only probes publicly accessible URLs. Respects rate limiting
-via a configurable delay between requests.
+via a configurable delay between requests. Callers are responsible
+for verifying robots.txt compliance before passing URLs to this function.
 
 Returns Vector of NamedTuples with url, status fields.
 """
@@ -94,6 +109,8 @@ end
     bfs_expand(graph, seed_entities; max_depth=5)
 
 Perform BFS expansion from seed entity names.
+Algorithm: Cormen et al., Introduction to Algorithms (MIT Press, 1990).
+Implemented via Graphs.jl (JuliaGraphs, MIT License).
 Returns the expanded SpectorGraph.
 """
 function bfs_expand(
@@ -116,7 +133,6 @@ function bfs_expand(
                 new_entity in visited && continue
                 push!(next_frontier, new_entity)
 
-                # Add nodes if not present
                 if !haskey(graph.entities, entity)
                     add_vertex!(graph.graph)
                     graph.entities[entity] = nv(graph.graph)
@@ -143,7 +159,10 @@ end
     umap_embed(embeddings; n_components=15)
 
 Perform UMAP dimensionality reduction.
-Input: n_samples x n_features matrix
+Algorithm: McInnes, Healy, Melville (2018), arXiv:1802.03426.
+Implemented via UMAP.jl (BSD-3 License).
+
+Input:  n_samples x n_features matrix
 Output: n_samples x n_components matrix
 """
 function umap_embed(
@@ -175,16 +194,22 @@ function extract_co_occurring(graph::SpectorGraph, entity::String)::Vector{Strin
 end
 
 """
-    suppression_score(redacted, recovered)
+    embedding_delta_norm(vec_a, vec_b)
 
-L2 norm of embedding delta. Higher = more semantic divergence
-between visible (redacted) and hidden (recovered) text layers.
+L2 (Euclidean) norm of the difference between two embedding vectors.
+Higher values indicate greater semantic divergence between the two inputs.
+
+Mathematical basis: standard Euclidean norm || a - b ||_2, public domain.
+Implemented via Julia LinearAlgebra stdlib.
+
+Example use: measure semantic distance between a redacted and a
+full-text embedding to quantify information suppression in documents.
 """
-function suppression_score(
-    redacted::Vector{Float64},
-    recovered::Vector{Float64}
+function embedding_delta_norm(
+    vec_a::Vector{Float64},
+    vec_b::Vector{Float64}
 )::Float64
-    return norm(recovered - redacted)
+    return norm(vec_b - vec_a)
 end
 
 end # module SPECTOR
