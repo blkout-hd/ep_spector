@@ -1,9 +1,7 @@
-"""
-SPECTOR URL Configuration
-"""
+"""SPECTOR URL Configuration."""
 from django.contrib import admin
+from django.urls import path, include
 from django.http import JsonResponse
-from django.urls import include, path
 
 
 def health(request):
@@ -11,9 +9,10 @@ def health(request):
 
 
 urlpatterns = [
-    path("health/", health),
     path("admin/", admin.site.urls),
-    path("api/documents/", include("apps.documents.urls")),
-    path("api/entities/", include("apps.entities.urls")),
-    path("api/privacy/", include("apps.privacy.urls")),
+    path("api/health/", health),
+    path("api/documents/", include("spector_django.apps.documents.urls")),
+    path("api/entities/", include("spector_django.apps.entities.urls")),
+    path("api/privacy/", include("spector_django.apps.privacy.urls")),
+    path("api-auth/", include("rest_framework.urls")),
 ]

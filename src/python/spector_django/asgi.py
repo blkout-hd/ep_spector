@@ -1,12 +1,8 @@
-"""
-ASGI configuration for SPECTOR Django service.
-Supports both HTTP (DRF) and WebSocket (Channels).
-"""
+"""ASGI config for SPECTOR Django (WebSocket + HTTP)."""
 import os
 
-from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.security.websocket import AllowedHostsOriginValidator
+from channels.auth import AuthMiddlewareStack
 from django.core.asgi import get_asgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "spector_django.settings")
@@ -15,9 +11,8 @@ django_asgi_app = get_asgi_application()
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
-    "websocket": AllowedHostsOriginValidator(
-        AuthMiddlewareStack(
-            URLRouter([])
-        )
+    "websocket": AuthMiddlewareStack(
+        URLRouter([])
+        # WebSocket routes registered here as app features are added
     ),
 })
