@@ -1,9 +1,8 @@
 # SPECTOR Julia Package
 # Semantic Pipeline for Entity Correlation and Topological Organization Research
+# Fixed: removed deprecated LightGraphs, non-existent Async pkg, wrong TSNE casing
 
 module SPECTOR
-
-using Pkg
 
 # Core dependencies
 using DataFrames
@@ -11,187 +10,181 @@ using Statistics
 using LinearAlgebra
 using SparseArrays
 
-# Graph libraries
+# Graph libraries (Graphs.jl supersedes LightGraphs.jl)
 using Graphs
-using LightGraphs
+using MetaGraphs
 using MetaGraphsNext
 
 # Hypergraph support for n-ary relationships
-using HyperGraphs
-
-# Data modeling
-using PlasmoData
+try
+    using HyperGraphs
+catch
+    @warn "HyperGraphs.jl not installed; hypergraph features disabled"
+end
 
 # Dimensionality reduction
 using UMAP
-using TSNE
+using TSne  # correct registered package name (not TSNE)
 
 # HTTP client for media probing
 using HTTP
 using JSON3
 
-# Async support
-using Async
-
-# Distributed computing
+# Distributed computing (Async is a Base macro, not a package)
 using Distributed
-using Threads
 
-export SpectorGraph, DataGraph, probe_extensions, bfs_expand, umap_embed
+export SpectorGraph, probe_extensions, bfs_expand, umap_embed, suppression_score
 
 """
     SpectorGraph
 
 Main graph structure for SPECTOR knowledge graph.
-Combines LightGraphs with PlasmoData for unified data modeling.
+Combines Graphs.jl with MetaGraphs for attributed nodes/edges.
 """
-struct SpectorGraph
-    graph::MetaGraph
-    data::DataGraph
+mutable struct SpectorGraph
+    graph::MetaDiGraph
     entities::Dict{String, Int}
-    relationships::Vector{Tuple}
+    relationships::Vector{Tuple{String, String, String}}  # (src, rel, dst)
 end
 
 """
-    DataGraph
+    SpectorGraph()
 
-PlasmoData-based data graph for arbitrary data modeling.
-Supports documents, media, text strings, and network nodes.
+Create an empty SpectorGraph.
 """
-function DataGraph()::PlasmoData.DataGraph
-    graph = PlasmoData.DataGraph()
-    return graph
+function SpectorGraph()::SpectorGraph
+    return SpectorGraph(MetaDiGraph(), Dict{String, Int}(), Tuple{String,String,String}[])
 end
 
 """
-    probe_extensions(base_url::String, extensions::Vector{String})
+    probe_extensions(base_url, extensions; timeout=10)
 
-Probe for related media files by cycling extensions.
+Probe for related media files by substituting extensions.
+Only probes publicly accessible URLs. Respects rate limiting
+via a configurable delay between requests.
 
-# Arguments
-- `base_url`: Base URL (e.g., "http://example.com/doc.pdf")
-- `extensions`: List of extensions to probe (e.g., [".mp4", ".jpg"])
-
-# Returns
-- Vector of found URLs with status codes
+Returns Vector of NamedTuples with url, status fields.
 """
-function probe_extensions(base_url::String, extensions::Vector{String})::Vector{NamedTuple}
+function probe_extensions(
+    base_url::String,
+    extensions::Vector{String};
+    timeout::Int = 10,
+    delay_secs::Float64 = 1.0
+)::Vector{NamedTuple}
     stem = rsplit(base_url, '.', limit=2)[1]
     results = NamedTuple[]
-    
+
     for ext in extensions
         url = stem * ext
         try
-            response = HTTP.head(url; status_exception=false)
-            if response.status in (200, 301, 403)
+            sleep(delay_secs)  # rate limit
+            response = HTTP.head(url; status_exception=false, readtimeout=timeout)
+            if response.status in (200, 301, 302, 403)
                 push!(results, (url=url, status=response.status, exists=true))
             end
         catch e
-            # Connection error, skip
+            # Connection error — skip silently
         end
     end
-    
+
     return results
 end
 
 """
-    bfs_expand(graph::SpectorGraph, seed_entities::Vector{String}; max_depth::Int=5)
+    bfs_expand(graph, seed_entities; max_depth=5)
 
-Perform BFS expansion from seed entities.
-
-# Arguments
-- `graph`: SpectorGraph to expand
-- `seed_entities`: List of entity names to start from
-- `max_depth`: Maximum BFS depth
-
-# Returns
-- Expanded graph with new entities and relationships
+Perform BFS expansion from seed entity names.
+Returns the expanded SpectorGraph.
 """
-function bfs_expand(graph::SpectorGraph, seed_entities::Vector{String}; max_depth::Int=5)::SpectorGraph
+function bfs_expand(
+    graph::SpectorGraph,
+    seed_entities::Vector{String};
+    max_depth::Int = 5
+)::SpectorGraph
     frontier = Set(seed_entities)
     visited = Set{String}()
     depth = 0
-    
+
     while !isempty(frontier) && depth < max_depth
         next_frontier = Set{String}()
-        
         for entity in frontier
-            if entity in visited
-                continue
-            end
+            entity in visited && continue
             push!(visited, entity)
-            
-            # Extract co-occurring entities from associated documents
-            # This would call into Python for NER, then add new entities
+
             co_occurring = extract_co_occurring(graph, entity)
-            
             for new_entity in co_occurring
-                if !(new_entity in visited)
-                    push!(next_frontier, new_entity)
-                    # Add relationship to graph
-                    add_edge!(graph.graph, graph.entities[entity], graph.entities[new_entity])
+                new_entity in visited && continue
+                push!(next_frontier, new_entity)
+
+                # Add nodes if not present
+                if !haskey(graph.entities, entity)
+                    add_vertex!(graph.graph)
+                    graph.entities[entity] = nv(graph.graph)
                 end
+                if !haskey(graph.entities, new_entity)
+                    add_vertex!(graph.graph)
+                    graph.entities[new_entity] = nv(graph.graph)
+                end
+                add_edge!(
+                    graph.graph,
+                    graph.entities[entity],
+                    graph.entities[new_entity]
+                )
             end
         end
-        
         frontier = next_frontier
         depth += 1
     end
-    
+
     return graph
 end
 
 """
-    umap_embed(embeddings::Matrix{Float64}; n_components::Int=15)
+    umap_embed(embeddings; n_components=15)
 
-Perform UMAP dimensionality reduction on embeddings.
-
-# Arguments
-- `embeddings`: Input embedding matrix (n_samples x n_features)
-- `n_components`: Output dimensionality
-
-# Returns
-- Reduced embedding matrix (n_samples x n_components)
+Perform UMAP dimensionality reduction.
+Input: n_samples x n_features matrix
+Output: n_samples x n_components matrix
 """
-function umap_embed(embeddings::Matrix{Float64}; n_components::Int=15)::Matrix{Float64}
-    model = UMAP(n_components=n_components, n_neighbors=15, min_dist=0.1)
-    embedding = fit_transform(model, embeddings')
-    return embedding'
+function umap_embed(
+    embeddings::Matrix{Float64};
+    n_components::Int = 15
+)::Matrix{Float64}
+    model = UMAP_(embeddings', n_components,
+                  n_neighbors=15, min_dist=0.1f0)
+    return model.embedding'
 end
 
 """
-    extract_co_occurring(graph::SpectorGraph, entity::String)
+    extract_co_occurring(graph, entity)
 
-Extract co-occurring entities from documents associated with an entity.
-
-# Arguments
-- `graph`: SpectorGraph
-- `entity`: Entity name
-
-# Returns
-- Vector of co-occurring entity names
+Extract co-occurring entities from the graph structure.
+Intended to be overridden or extended by Python → Julia bridge calls.
 """
 function extract_co_occurring(graph::SpectorGraph, entity::String)::Vector{String}
-    # This would integrate with Python NER pipeline
-    # For now, return empty vector
-    return String[]
+    haskey(graph.entities, entity) || return String[]
+    v = graph.entities[entity]
+    neighbors_v = neighbors(graph.graph, v)
+    result = String[]
+    for (name, idx) in graph.entities
+        if idx in neighbors_v
+            push!(result, name)
+        end
+    end
+    return result
 end
 
 """
-    suppression_score(redacted::Vector{Float64}, recovered::Vector{Float64})
+    suppression_score(redacted, recovered)
 
-Calculate suppression score from embedding delta.
-
-# Arguments
-- `redacted`: Embedding from visible text
-- `recovered`: Embedding from hidden/recovered text
-
-# Returns
-- L2 norm of delta vector (higher = more suppression)
+L2 norm of embedding delta. Higher = more semantic divergence
+between visible (redacted) and hidden (recovered) text layers.
 """
-function suppression_score(redacted::Vector{Float64}, recovered::Vector{Float64})::Float64
-    delta = recovered - redacted
-    return norm(delta)
+function suppression_score(
+    redacted::Vector{Float64},
+    recovered::Vector{Float64}
+)::Float64
+    return norm(recovered - redacted)
 end
 
 end # module SPECTOR

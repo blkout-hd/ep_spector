@@ -1,0 +1,67 @@
+# SPECTOR Smithery Registry Manifest
+# https://smithery.ai/docs/manifest
+
+name: spector
+version: "1.0.0"
+description: |
+  SPECTOR — Semantic Pipeline for Entity Correlation and Topological Organization Research.
+  MCP-compatible tools for searching public document corpora, querying the SPECTOR
+  knowledge graph, and exploring discovered media files.
+repository: https://github.com/blkout-hd/ep_spector
+license: MIT
+
+servers:
+  - id: doc-search
+    name: Document Search
+    description: Semantic search over ingested public documents
+    command: python mcp_servers/doc_search_server.py
+    transport: stdio
+    tools:
+      - search_documents
+
+  - id: kg-query
+    name: Knowledge Graph Query
+    description: Read-only Cypher queries against the SPECTOR Neo4j knowledge graph
+    command: python mcp_servers/kg_query_server.py
+    transport: stdio
+    tools:
+      - query_knowledge_graph
+      - get_entity_connections
+
+  - id: media-index
+    name: Media Index
+    description: Browse media files discovered via extension probing
+    command: python mcp_servers/media_index_server.py
+    transport: stdio
+    tools:
+      - list_media_probes
+      - get_media_by_doc
+
+requirements:
+  python: ">=3.10"
+  packages:
+    - mcp>=0.1.0
+    - qdrant-client>=1.6.0
+    - sentence-transformers>=2.2.0
+    - neo4j>=5.0.0
+    - python-dotenv>=1.0.0
+
+environment:
+  - name: NEO4J_URI
+    required: false
+    default: bolt://localhost:7687
+  - name: NEO4J_USER
+    required: false
+    default: neo4j
+  - name: NEO4J_PASSWORD
+    required: true
+    secret: true
+  - name: QDRANT_HOST
+    required: false
+    default: localhost
+  - name: QDRANT_PORT
+    required: false
+    default: "6333"
+  - name: SPECTOR_EMBED_MODEL
+    required: false
+    default: all-MiniLM-L6-v2
