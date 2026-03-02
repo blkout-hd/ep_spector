@@ -15,6 +15,7 @@ import redis
 
 from agents.pipeline.graph import build_graph
 from agents.pipeline.state import PipelineState
+from agents.pipeline.checkpointer import get_checkpointer
 
 logging.basicConfig(
     level=logging.INFO,
@@ -34,7 +35,9 @@ def main() -> None:
         password=os.environ["REDIS_PASSWORD"],
         decode_responses=True,
     )
-    pipeline = build_graph()
+
+    checkpointer = get_checkpointer()
+    pipeline = build_graph(checkpointer=checkpointer)
     logger.info("Agent worker started. Polling: %s", QUEUE_KEY)
 
     while True:
@@ -78,14 +81,16 @@ def main() -> None:
             r.setex(
                 f"{RESULT_KEY_PREFIX}{result['file_hash']}",
                 86400,
-                json.dumps({
-                    "file_hash": result["file_hash"],
-                    "entity_count": result["entity_count"],
-                    "kg_edges": result["kg_edges_written"],
-                    "n_clusters": result["n_clusters"],
-                    "stages": result["completed_stages"],
-                    "error": result.get("error"),
-                }),
+                json.dumps(
+                    {
+                        "file_hash": result["file_hash"],
+                        "entity_count": result["entity_count"],
+                        "kg_edges": result["kg_edges_written"],
+                        "n_clusters": result["n_clusters"],
+                        "stages": result["completed_stages"],
+                        "error": result.get("error"),
+                    }
+                ),
             )
 
             logger.info(

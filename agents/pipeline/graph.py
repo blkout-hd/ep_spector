@@ -4,7 +4,10 @@ SPECTOR LangGraph StateGraph -- wires all agents into a pipeline.
 from __future__ import annotations
 
 import logging
+from typing import Optional
+
 from langgraph.graph import StateGraph, END
+
 from .state import PipelineState
 
 logger = logging.getLogger(__name__)
@@ -12,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 def node_ingest(state: PipelineState) -> PipelineState:
     from agents.ingest_agent import IngestAgent
+
     agent = IngestAgent(ocr_enabled=True)
     result = agent.extract(state["source"])
     if result is None:
@@ -30,6 +34,7 @@ def node_ingest(state: PipelineState) -> PipelineState:
 
 def node_ner(state: PipelineState) -> PipelineState:
     from agents.ner_agent import NERAgent
+
     agent = NERAgent()
     entities = agent.extract(
         state.get("visible_text", "") + " " + state.get("hidden_text", "")
@@ -53,6 +58,7 @@ def node_ner(state: PipelineState) -> PipelineState:
 
 def node_embed(state: PipelineState) -> PipelineState:
     from agents.embed_agent import EmbedAgent
+
     agent = EmbedAgent()
     full_text = state.get("visible_text", "")[:8000]
     doc_vec = agent.embed_single(full_text)
@@ -74,6 +80,7 @@ def node_embed(state: PipelineState) -> PipelineState:
 def node_kg(state: PipelineState) -> PipelineState:
     from agents.ner_agent import Entity
     from agents.kg_expand_agent import KGExpandAgent
+
     agent = KGExpandAgent()
     entities = [
         Entity(
@@ -122,7 +129,12 @@ def _should_stop(state: PipelineState) -> str:
     return "stop" if state.get("error") else "continue"
 
 
-def build_graph() -> StateGraph:
+def build_graph(checkpointer: Optional[object] = None) -> StateGraph:
+    """Build and compile the LangGraph StateGraph.
+
+    If a checkpointer is provided, compile the graph with persistence enabled.
+    Otherwise, compile without persistence (stateless execution).
+    """
     g = StateGraph(PipelineState)
 
     g.add_node("ingest", node_ingest)
@@ -138,4 +150,7 @@ def build_graph() -> StateGraph:
     g.add_edge("kg", "manifold")
     g.add_edge("manifold", END)
 
+    if checkpointer is not None:
+        logger.info("Compiling graph with checkpointer %s", type(checkpointer).__name__)
+        return g.compile(checkpointer=checkpointer)
     return g.compile()
