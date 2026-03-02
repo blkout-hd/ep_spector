@@ -5,8 +5,14 @@ Shared pytest fixtures for all test modules.
 """
 from __future__ import annotations
 
+import os
+import random
+
 import pytest
 
+# ---------------------------------------------------------------------------
+# Existing lightweight fixtures (no Django dependency)
+# ---------------------------------------------------------------------------
 
 @pytest.fixture
 def sample_doc():
@@ -49,7 +55,6 @@ def sample_entities():
 @pytest.fixture
 def sample_embeddings():
     """Minimal embedding records fixture (low-dim for test speed)."""
-    import random
     rng = random.Random(42)
     return [
         {
@@ -64,7 +69,7 @@ def sample_embeddings():
             "embed_id": "emb002",
             "source_id": "testdoc0001",
             "source_type": "document",
-            "vector": [rng.gauss(0.1, 1) for _ in range(384)],  # slightly different
+            "vector": [rng.gauss(0.1, 1) for _ in range(384)],
             "model": "all-MiniLM-L6-v2",
             "layer": "hidden",
         },
@@ -98,3 +103,61 @@ def minimal_state(sample_doc, sample_entities, sample_embeddings):
         "stage": "test",
         "complete": False,
     }
+
+
+# ---------------------------------------------------------------------------
+# Django test fixtures (require pytest-django and DJANGO_SETTINGS_MODULE)
+# ---------------------------------------------------------------------------
+
+def _django_ready() -> bool:
+    """Return True if Django can be set up in the current environment."""
+    os.environ.setdefault(
+        "DJANGO_SETTINGS_MODULE", "spector_django.settings"
+    )
+    try:
+        import django  # noqa: F401
+        django.setup()
+        return True
+    except Exception:
+        return False
+
+
+@pytest.fixture
+def django_document(db):
+    """
+    Create and return a real Document ORM instance backed by the test DB.
+    Requires pytest-django and a properly configured DJANGO_SETTINGS_MODULE.
+    """
+    from spector_django.apps.documents.models import Document
+
+    doc = Document.objects.create(
+        title="Test Document",
+        file_hash="deadbeef" * 8,
+        raw_text="Jeffrey Epstein met with Bill Gates in 2011.",
+        status=Document.Status.COMPLETE,
+    )
+    return doc
+
+
+@pytest.fixture
+def django_entity(db):
+    """
+    Create and return a real Entity ORM instance backed by the test DB.
+    """
+    from spector_django.apps.entities.models import Entity
+
+    entity = Entity.objects.create(
+        text="Jeffrey Epstein",
+        normalized="jeffrey epstein",
+        label="PERSON",
+        confidence=0.98,
+    )
+    return entity
+
+
+@pytest.fixture
+def api_client():
+    """DRF APIClient for endpoint tests."""
+    from rest_framework.test import APIClient
+
+    return APIClient()
