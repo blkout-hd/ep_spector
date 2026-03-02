@@ -1,0 +1,57 @@
+# ─────────────────────────────────────────────
+# SPECTOR Django Service
+# Multi-stage, non-root, production-ready
+# ─────────────────────────────────────────────
+FROM python:3.12-slim AS base
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Builder stage ────────────────────────────
+FROM base AS builder
+WORKDIR /build
+COPY pyproject.toml .
+RUN pip install --upgrade pip && \
+    pip install --prefix=/install \
+    django>=4.2.0 \
+    djangorestframework>=3.14.0 \
+    channels>=4.0.0 \
+    daphne>=4.0.0 \
+    psycopg2>=2.9.0 \
+    python-dotenv>=1.0.0 \
+    pydantic>=2.0.0 \
+    neo4j>=5.0.0 \
+    qdrant-client>=1.6.0 \
+    redis>=5.0.0 \
+    pymongo>=4.5.0 \
+    langgraph>=0.2.0 \
+    langchain>=0.1.0 \
+    rich>=13.0.0
+
+# ── Runtime stage ────────────────────────────
+FROM base AS runtime
+COPY --from=builder /install /usr/local
+
+RUN groupadd --gid 1001 spector && \
+    useradd --uid 1001 --gid spector --shell /bin/bash --create-home spector
+
+WORKDIR /app
+COPY src/python/ /app/
+
+RUN chown -R spector:spector /app
+USER spector
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8000/health/ || exit 1
+
+CMD ["python", "-m", "daphne", "-b", "0.0.0.0", "-p", "8000", "spector_django.asgi:application"]
